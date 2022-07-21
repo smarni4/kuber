@@ -28,10 +28,10 @@
 
 # ----> Master Node --> As I said above, there are two kinds of nodes master and working node. Master node will manage the worker nodes and assign the load to them. If any worker node is failed, the master will assign that failed node work load to other node. It also scales up/down the node count based on the work load.
 	
-		    ---> Master            ----> Worker 
+		  ---> Master       ----> Worker 
 						
 			Kube-apiserver <------> kubelet
-			etcd			Container Runtime
+			etcd			              Container Runtime
 			Controller	
 			Scheduler
 
@@ -39,7 +39,7 @@
 
 # ----> ETCD ---> It is the key-value store used by the kubernetes to store all data used to manage the cluster. It stores all the data in every node at etcd located in the respective master node. ETCD is responsible for implementing locks within the clusters to ensure there are no conflicts between the masters.
 
-# ----> Controller --> It is respnsible for noticing and responding when nodes, containers, and endpoints goes down. The controllers makes decisions to bring up new nodes, containers in this situation,
+# ----> Controller --> It is respnsible for noticing and responding when nodes, containers, and endpoints goes down. The controllers makes decisions to bring up new nodes, containers in this situation.
 
 # ----> Scheduler ---> It is responsible for scheduling the distribution of containers across nodes.
 
@@ -234,8 +234,112 @@ spec:
 # To see the details of replica set we have to use the command
             ### kubectl describe replicaset [replicaset name]
    
-#########################################################################################################################################################################################   
+#########################################################################################################################################################################################
+############################################################## DEPLOYMENTS ##############################################################################################################
+#########################################################################################################################################################################################
 
+# Deployments will help in deploying multiple sets of replica sets at once. It controls the replica sets and pods inside those replicasets and makes sure that the respectivce number of
+# pods and replica sets are running inside it.
 
+# A structure of relation between application container, POD, Replica set, Deployment is 
+
+    Application Container -----> It consists of the application resources.
+    POD -----------------------> It consists of Application Container.
+    Replica Set ---------------> It consists & manages multiple PODS.
+    Deployment ----------------> It consists & manages multiple Replica Sets.
+
+# The structure of deployment yaml file is 
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-deployment
+  labels:
+    app: nginx
+    type: front-end
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      type: front-end
+  template:
+    metadata:
+      name: myapp-pod
+      labels:
+        app: myapp
+        type: front-end
+    spec:
+      containers:
+      - name: nginx-container
+        image: nginx
+# After writing a required deployment yaml file we can deploy it using the command 
+
+        kubectl create/apply -f [file-name]
+
+# To replace the file after making some changes in the yaml file 
+
+        kubectl replace -f [file-name]
+
+# To check the existing deployments
+
+        kubectl get deployments
+
+################# Updates and Rollback ##############################################
+
+# When we create a deployment for our application for the first time, it triggers a rollout. A new roll out will creates a new deployment revision.
+
+# When we update an application with some changes, a new deployment revision will be created. It doesn't change the previous deployment revision, so it is easy to go back to the previous 
+# version and track our changes.   
+
+# To check our rollout status we can use the command
+
+        kubectl rollout status [deployment-name]
+
+# To check the history of our roll outs
+
+        kubectl rollout history [deployment-name]
+
+# There are two styles of deployments:
+
+    1. Recreate       2. Rolling Update.
+
+# Recreate ---------> In this method, it destroys the present running instances and replaces the updates all at once. So by using this method the application will goes down for certain time
+# untill all the updates upload successful.
+
+# Rolling Update ---> In this method, it replaces the updated instances with existing instances one by one to overcome the disadvantage of the recreate method. In this method, the application    # will not goes down while updating.
+
+# By default the upgrade method is rolling Update. If we didn't mention any specific method while deploying the update, it will choose the rolling update by default.
+
+# To do the update, after changing the respective required changes in the deplpoyment yaml file we have to run the following command
+
+          kubectl apply -f [updated-deployment-yaml-file]
+
+# This command will create a new revision to the application.
+
+# We can also update the file using the command
+
+          kubectl set [key-name] [deployment-name] [old-value] = [new-image]
+
+# But the above method is not recommended as it will use the same deployment file. It will be hard to identify the changes in the future.
+
+# To see the details about the updates
+
+          kubectl describe deployment [deployment-name]
+
+################# ROLLBACK ############################
+
+# To rollback to the previous revision [previous_version] 
+
+          kubectl rollout undo [deployment-name]
+
+# To record the command used by us to rollout the instances
+
+          kubectl create -f [file-name] --record=true
+
+# To edit the existing deployment yaml file, we can use the command
+
+          kubectl edit deployment [deployment-name]
+
+###############################################################################################################################################################################################
 
 
