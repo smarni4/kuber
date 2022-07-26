@@ -370,20 +370,20 @@ spec:
 # To create a service, we have to define a YAML file as shown below
 
 --> 	apiVersion: v1
-	kind: service
-	metadata:
-	  name: myapp-service
-	
-	spec:
-	  type: NodePort
-	  ports:
-	  - targetPort: 80
-	    Port: 80
-	    nodePort: 30008	     
+      kind: service
+      metadata:
+        name: myapp-service
+      
+      spec:
+        type: NodePort
+        ports:
+        - targetPort: 80
+          Port: 80
+          nodePort: 30008	     
 
-	  selector:
-	    app: myapp
-	    type: front-end
+        selector:
+          app: myapp
+          type: front-end
 
 # To create the service using the YAML file, we have to run the command
 
@@ -400,10 +400,31 @@ spec:
 # To map the multiple pods in the single node using the single service, we don't need to do anything ad it will allocate to any of the pod automatically.
 
 # If we need to map the pods which are located in different nodes, the service will also get distributed among those different nodes and maps the respetive pod to the same NodePort. So we can 
-  access any pod in any node using the same node port and by changing the ip address respective to the node we are mapping to.
+# access any pod in any node using the same node port and by changing the ip address respective to the node we are mapping to.
 
 ############# CLUSTERIP SERVICES #########################################
 
-# In clusterIP service, the frontend, backend, and  redis are interlinked among them using the services. 
+# In clusterIP service, the frontend, backend, and  databases or redis are interlinked among them using the services. 
 
-# As the IP addresses are not perma
+# As the IP addresses are not permanent, we cannot depend on IP address for internal communication.
+
+# To create a cluster IP service,
+
+-----> apiVersion: v1
+      kind: Service
+      metadata:
+        name: back-end
+      
+      spec:
+        type: clusterIP
+        ports:
+          - targetPort: 80
+            port: 80
+        
+        selector:
+          app: myapp
+          type: back-end
+
+# To create a service
+
+    kubectl create -f [filename.yaml]
