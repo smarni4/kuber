@@ -132,18 +132,16 @@ spec:
       image: nginx 		        ------
 
 # After finishing the YAML file we have to run the command 
-        
-      kubectl [create/apply] -f [filename.yml] ----> to create the pod.
+        ##### kubectl [create/apply] -f [filename.yml] ##### to create the pod.
 
 # After creating the pod we can verify it by running the commands:
 
-	    kubectl get pods	
+	kubectl get pods	
 	
-	    kubectl describe pod [pod_name]
+	kubectl describe pod [pod_name]
 
 # To edit the POD info after creating the POD, we have to run the command 
-
-      kubectl edit pod [pod_name]
+        ##### kubectl edit pod [pod_name] ######
 
 ####################################################################################################################################
 ############################ Replica Set and Replication Controllers ###############################################################
@@ -188,12 +186,10 @@ spec:
   replicas:3
 
 # After creating the replication controller yaml file we have to create the controller using the command 
-            
-        kubectl create/apply -f [filename] 
+              ### kubectl create/apply -f [filename] #####
 
 # After creating the replication controllers we can cross check them using the command 
-        
-        kubectl get replicationcontroller
+          ### kubectl get replicationcontroller ###
 
 # As we mentioned the replicas: 3, the replication controller will create 3 pods automatically. If we delete one of the pod manually or it get deleted the replication controller will
 # automatically create the pods untill the number of pods get equal to the replicas mentioned in the yaml file.
@@ -210,39 +206,33 @@ spec:
 
 # The syntax of replicaset is same as the above mentioned syntax of replication controller but the selector key should be added next to the replicas.
 
- --> selector:
-	      matchLabels:
-	        type: front-end
+# --> selector:
+	matchLabels:
+	  type: front-end
 
 # We also need to change the apiversion and kind to apps/v1 and ReplicaSet respectively.
 
-######## Scale ##############
+######## Scale ##############33
 
 # To get the replicasets created we have to use the command 
-      
-      kubectl get replicaset
+              ### kubectl get replicaset ###
 
 # To delete the replicaset we have to use the command 
-
-      kubectl delete replicaset [replicaset name]
+              ### kubectl delete replicaset [replicaset name] ###
  
 # To scale the replicaset we have to edit the replicaset defination file replicas key value to required number.
 
 # After editing it, we have to replace the file with old file using the command 
-      
-        kubectl replace -f [filename] 
+              ### kubectl replace -f [filename] ####
 
 # We can also update the file using the command 
-        
-        kubectl scale --replicas=6 -f [filename]
-				
-        kubectl scale --replicas=6 KIND NAME [ given in the metadata ]
+            ### kubectl scale --replicas=6 -f [filename] ###
+						### kubectl scale --replicas=6 KIND NAME [ given in the metadata ]
 
 # The replicas value in defination file will not get updated if we use the scale command to do so. It only update the system to scale the pods.
 
 # To see the details of replica set we have to use the command
-
-        kubectl describe replicaset [replicaset name]
+            ### kubectl describe replicaset [replicaset name]
    
 #########################################################################################################################################################################################
 ############################################################## DEPLOYMENTS ##############################################################################################################
@@ -351,5 +341,69 @@ spec:
           kubectl edit deployment [deployment-name]
 
 ###############################################################################################################################################################################################
+################################################ SERVICES -PORTS, -CLUSTER IP, -LOAD BALANCER #################################################################################################
+###############################################################################################################################################################################################
 
+# Services helps to connect within the application between pods or between the applications or between the data stores and applications.
 
+# It also helps in connecting between backend and frontend of the application.
+
+# In the basic node, assume that there is only one pod in the node and only that single node is present.
+
+# In the node the pod is connected to the cluster cloud with cluster IP address.
+
+# To connect to the appplication inside the pod which is presented inside the node. There are two ways
+
+------> Using SSH, we can enter into the node server IP address and access the web page using the curl command.
+
+------> To access the application from outside the node by using the ip address of the node. We need something to connect between the user, node, and respective pod. This service is known as 
+	NODE-PORT service.
+
+############## NODE-PORT service ########################
+
+# In NODE-PORT service, there will be a service which connects the user, node, and pod by mapping them using the ports Target Port, Port, Node Port.
+
+# In this service, there will be a IP address for the service, which is known as cluster IP address.
+
+# Both the Target port and Port will be same, where NodePort ranges betweem 30000 and 32767.
+
+# To create a service, we have to define a YAML file as shown below
+
+--> 	apiVersion: v1
+	kind: service
+	metadata:
+	  name: myapp-service
+	
+	spec:
+	  type: NodePort
+	  ports:
+	  - targetPort: 80
+	    Port: 80
+	    nodePort: 30008	     
+
+	  selector:
+	    app: myapp
+	    type: front-end
+
+# To create the service using the YAML file, we have to run the command
+
+	kubectl create -f [file_name.yml]
+
+# To get the created services
+
+	kubectl get services
+
+# To access the web service creted, we can use the curl command
+
+	curl http://ip-address(Node):[NodePort]
+
+# To map the multiple pods in the single node using the single service, we don't need to do anything ad it will allocate to any of the pod automatically.
+
+# If we need to map the pods which are located in different nodes, the service will also get distributed among those different nodes and maps the respetive pod to the same NodePort. So we can 
+  access any pod in any node using the same node port and by changing the ip address respective to the node we are mapping to.
+
+############# CLUSTERIP SERVICES #########################################
+
+# In clusterIP service, the frontend, backend, and  redis are interlinked among them using the services. 
+
+# As the IP addresses are not perma
