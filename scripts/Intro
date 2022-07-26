@@ -18,7 +18,7 @@
 # is hard to use.
 
 # The advantages of container orchestration are even when your hardware is down, your application will run as it runs on multiple nodes. We can easily deploy nodes in few seconds based on the 
-#  requirements.
+# requirements.
 
 ########################### Kubernetes Architecture #######################
 
