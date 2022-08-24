@@ -32,7 +32,7 @@
 						
 			Kube-apiserver <------> kubelet
 			etcd			              Container Runtime
-			Controller	
+			Controller	            Kube Proxy
 			Scheduler
 
 # ----> API server --> It is the pathway between users, management devices, Command line interfaces and kubernetes cluster.
@@ -43,7 +43,7 @@
 
 # ----> Scheduler ---> It is responsible for scheduling the distribution of containers across nodes.
 
-# ----> Kubelet -----> It is the agent on every node that is responsible to make sure that every container on that node is running as expected. It interacts with the master by forwarding the worker node status to the master an takes the orders from the master to the worker node.
+# ----> Kubelet -----> It is the agent on every node that is responsible to make sure that every container on that node is running as expected. It interacts with the master by forwarding the worker node status to the master and  takes the orders from the master to the worker node.
 
 # ----> Container runtime ---> It is the underlying software that runs the container.( EG: DOCKER )  
 
@@ -143,6 +143,14 @@ spec:
 # To edit the POD info after creating the POD, we have to run the command 
         ##### kubectl edit pod [pod_name] ######
 
+# To execute the commands or debug inside the container, we can log into the container terminal using the command
+
+        ##### kubectl exec -it [pod-name] -- bin/bash       ---> -it = interactive terminal
+
+# To check the logs of the running containers/Pods, we can use the command
+
+        ##### kubectl logs [pod_name]
+
 ####################################################################################################################################
 ############################ Replica Set and Replication Controllers ###############################################################
 ####################################################################################################################################
@@ -173,15 +181,15 @@ spec:
   template:
     
     metadata:		--------------
-      name: myapp-pod		    --
-      labels:			          --
-	app: myapp		            --
-	type: front-end		        ---> [ metadata and spec of the pod ]
-   				                  --
-    spec:			              --
-      containers:		        --
-	- name: nginx-container   --
-	  image: nginx	 -----------
+      name: myapp-pod		      --
+      labels:			            --
+	      app: myapp		        --
+	      type: front-end		      ---> [ metadata and spec of the pod ]
+   				                    --
+    spec:			                --
+      containers:		          --
+	    - name: nginx-container --
+	      image: nginx  ----------
   
   replicas:3
 
