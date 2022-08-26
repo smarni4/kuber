@@ -51,15 +51,17 @@
 #########################  KUBECTL ###################################################
 ######################################################################################
 
- kubectl run hello-minkube -----> It deploy the hello-minikube appplication in the kubernetes cluster.
+ kubectl run hello-minkube -------------------> It deploy the hello-minikube appplication in the kubernetes cluster.
 
- kubectl cluster-info ----------> It shows the information about the cluster.
+ kubectl cluster-info ------------------------> It shows the information about the cluster.
 
- kubectl get nodes -------------> It shows all the nodes in the cluster.
+ kubectl get nodes ---------------------------> It shows all the nodes in the cluster.
 
- kubectl edit pod [pod_name] ---> It opens the yaml file of pod where we can edit the file and make required changes.
+ kubectl edit pod [pod_name]  ----------------> It opens the yaml file of pod where we can edit the file and make required changes.
 
- kubectl apply -f [yamlfile] ---> It creates a pod with the requirements given in that yaml file.
+ kubectl apply -f [yamlfile]  ----------------> It creates a pod with the requirements given in that yaml file.
+
+ kubectl create namespace [namespace name] ---> It creates a namespace.
 
 ########################## PODS ######################################################
 
@@ -214,8 +216,8 @@ spec:
 
 # The syntax of replicaset is same as the above mentioned syntax of replication controller but the selector key should be added next to the replicas.
 
-# --> selector:
-	matchLabels:
+  selector:
+   matchLabels:
 	  type: front-end
 
 # We also need to change the apiversion and kind to apps/v1 and ReplicaSet respectively.
@@ -242,9 +244,7 @@ spec:
 # To see the details of replica set we have to use the command
             ### kubectl describe replicaset [replicaset name]
    
-#########################################################################################################################################################################################
-############################################################## DEPLOYMENTS ##############################################################################################################
-#########################################################################################################################################################################################
+#######################################################################################################################################################################################################################DEPLOYMENTS####################################################################################################################################################################################################################################################################
 
 # Deployments will help in deploying multiple sets of replica sets at once. It controls the replica sets and pods inside those replicasets and makes sure that the respectivce number of
 # pods and replica sets are running inside it.
