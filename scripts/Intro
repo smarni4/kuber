@@ -437,3 +437,83 @@ spec:
 
     kubectl create -f [filename.yaml]
 
+####################################################################################################################################################################################
+###################################################### HELM ########################################################################################################################
+####################################################################################################################################################################################
+
+# HELM CHARTS --- > The YAML files that are defined previously by someone and packed as a bundle,, which can be used by other developers for their project is knwon as HELM charts.
+
+                    Basically, someone will pack all the basic yaml files required for building an application and make them available for everyone through HELm by uploading them to
+                    HELM repository. Anyone who needs to develop an app with specific requirements can easily download them from the respective HELM repository. This group of YAML 
+                    files is known as HELM charts.
+
+# Template YAML files ---> The template yaml files is used when we need to create a multiple number of yaml files with same content and minor changes.
+
+                            Basically, template files consists of all the data that is same in all respective files and values that are different in those files are mentioned in 
+                            other yaml file sucha s values.yaml and those values are referred in the template file as [ .values.name ].
+
+For example, If we want to create a multiple microservices for an application with same specifications and only difference is their name and image, then we can use the template yaml.
+
+# Template.yaml
+
+apiVersion: v1
+kind: pod
+metadata:
+  name: {{ .values.name }} <----------------|
+spec:                                       |  
+  containers:                               |
+  - name: {{ .Values.container.name }} <----|--|
+    image: {{ .Values.container.image }} <--|--|--|
+    port: {{ .values.container.port }}  <---|--|--|--|
+                                            |  |  |  |
+# values.yaml                               |  |  |  | 
+                                            |  |  |  |
+name: my-app -------------------------------|  |  |  |
+container:                                     |  |  |
+ name: my-app-container -----------------------|  |  |
+ image: my-app-image -----------------------------|  | 
+ port: 9001   ---------------------------------------|
+
+# HELM Chart Structure
+
+  Helm chart consists of 
+  --> mychart/:   ------------> Chart name.
+      -----> chart.yaml ------> meta info about chart.
+      -----> values.yaml -----> values for the keys in template files.
+      -----> charts/ ---------> This folder consists of chart dependencies.
+      -----> templates/ ------> This folder consists of actual template yaml files. 
+
+# When we want to install the template files inside the mychart folder we have to run the command.
+
+        ############# helm install <chart_name> ################
+
+# When we want to override the values in the values.yaml file, we can do it using the command.
+
+        ############# helm install --values=[new_value.yaml] <chart_name> ############
+
+                        or
+
+        ############# helm install --set version=2.0.0 #############
+        
+# By using the above command we can update the default values or add the new values. 
+
+# When we ran the helm install command, it sends the request to the helm server known as tiller. Tiller gets all the required components and saves a copy of config file  for 
+# future references.
+
+# We can upgrade the help chart files using the command 
+
+        #### helm upgrade <chart_name>
+
+# We can roll back to previous version using the command
+
+        #### helm rollback <chart_name>
+
+# In the recent version of helm the tiller is removed due to the security issues.
+
+
+
+
+
+
+
+
