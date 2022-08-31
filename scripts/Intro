@@ -500,7 +500,7 @@ container:                                     |  |  |
 # When we ran the helm install command, it sends the request to the helm server known as tiller. Tiller gets all the required components and saves a copy of config file  for 
 # future references.
 
-# We can upgrade the help chart files using the command 
+# We can upgrade the helm chart files using the command 
 
         #### helm upgrade <chart_name>
 
