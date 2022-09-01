@@ -510,7 +510,7 @@ container:                                     |  |  |
 
 # In the recent version of helm the tiller is removed due to the security issues.
 
-############## Change in crontab ###############
+############## Changed in crontab ###############
 
 
 
